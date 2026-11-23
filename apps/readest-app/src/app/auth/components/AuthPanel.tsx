@@ -24,6 +24,9 @@ export default function AuthPanel({
 }: AuthPanelProps) {
   const _ = useTranslation();
   const { appService } = useEnv();
+  // Provider sign-in opens the provider's page in a browser, and a magic link signs in the
+  // browser that opens it: without a browser (Readest Lite) only the password works.
+  const hasBrowser = appService?.isBrowserSupported !== false;
   // `signInWithOAuth` redirects the whole page on web, which can cut off the
   // opt-in's settings write. Hold sign-in until it has landed. Null until the
   // user actually touches the checkbox, so the common path adds no delay.
@@ -44,7 +47,7 @@ export default function AuthPanel({
           </p>
         </div>
       </div>
-      {appService?.isBrowserSupported !== false && (
+      {hasBrowser && (
         <>
           <div className='flex w-full flex-col gap-2.5'>
             <ProviderLogin
@@ -82,7 +85,7 @@ export default function AuthPanel({
       <EmailPasswordAuth
         supabaseClient={supabaseClient}
         redirectTo={redirectTo}
-        magicLink={magicLink}
+        magicLink={magicLink && hasBrowser}
       />
       <ReadestCloudOptIn
         onPendingWrite={(write) => {

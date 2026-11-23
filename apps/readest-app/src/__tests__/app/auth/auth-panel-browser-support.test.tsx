@@ -1,6 +1,7 @@
 /**
- * Provider sign-in (Google, Apple, GitHub, Discord) opens the provider's page in a browser.
- * A runtime with no browser to open (Readest Lite on a Kindle) shows only email sign-in.
+ * Provider sign-in (Google, Apple, GitHub, Discord) opens the provider's page in a browser, and
+ * a magic link signs in whichever browser opens it. A runtime with no browser to open (Readest
+ * Lite on a Kindle) shows only email and password sign-in.
  */
 
 import { cleanup, render } from '@testing-library/react';
@@ -15,15 +16,12 @@ vi.mock('@/hooks/useTranslation', () => ({
     key.replace('{{provider}}', params?.['provider'] ?? ''),
 }));
 vi.mock('next/image', () => ({ default: () => null }));
-vi.mock('@/app/auth/components/EmailPasswordAuth', () => ({
-  default: () => <form aria-label='email sign-in' />,
-}));
 vi.mock('@/app/auth/components/ReadestCloudOptIn', () => ({ default: () => null }));
 
 import AuthPanel from '@/app/auth/components/AuthPanel';
 
 const renderPanel = () =>
-  render(<AuthPanel supabaseClient={{} as SupabaseClient} onProviderSignIn={vi.fn()} />);
+  render(<AuthPanel supabaseClient={{} as SupabaseClient} magicLink onProviderSignIn={vi.fn()} />);
 
 afterEach(() => {
   cleanup();
@@ -37,16 +35,19 @@ describe('AuthPanel provider sign-in', () => {
       expect(queryByText(`Sign in with ${provider}`)).not.toBeNull();
     }
     expect(queryByText('or continue with email')).not.toBeNull();
-    getByLabelText('email sign-in');
+    expect(queryByText('Send a magic link email')).not.toBeNull();
+    getByLabelText('Email address');
   });
 
-  test('shows only email sign-in without a browser', () => {
+  test('shows only email and password sign-in without a browser', () => {
     h.appService.isBrowserSupported = false;
     const { queryByText, getByLabelText } = renderPanel();
     for (const provider of ['Google', 'Apple', 'GitHub', 'Discord']) {
       expect(queryByText(`Sign in with ${provider}`), `Sign in with ${provider}`).toBeNull();
     }
     expect(queryByText('or continue with email'), 'the email divider').toBeNull();
-    getByLabelText('email sign-in');
+    expect(queryByText('Send a magic link email'), 'the magic link').toBeNull();
+    getByLabelText('Email address');
+    getByLabelText('Your Password');
   });
 });
