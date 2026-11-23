@@ -2826,5 +2826,8 @@
   "Books uploaded": "Feltöltött könyvek",
   "Reset Counts": "Számlálók nullázása",
   "Reset the counts and sync history on this device?": "Nullázza a számlálókat és a szinkronizálási előzményeket ezen az eszközön?",
-  "Folder not available": "A mappa nem érhető el"
+  "Folder not available": "A mappa nem érhető el",
+  "Sign in with a QR code": "Bejelentkezés QR-kóddal",
+  "Unable to connect to Readest. Please check your network connection.": "Nem sikerült csatlakozni a Readesthez. Ellenőrizze a hálózati kapcsolatot.",
+  "Approve on a phone or computer signed in to Readest.": "Hagyja jóvá egy Readestbe bejelentkezett telefonon vagy számítógépen."
 }

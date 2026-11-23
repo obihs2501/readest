@@ -2753,5 +2753,8 @@
   "Books uploaded": "Buku diunggah",
   "Reset Counts": "Atur Ulang Hitungan",
   "Reset the counts and sync history on this device?": "Atur ulang hitungan dan riwayat sinkronisasi di perangkat ini?",
-  "Folder not available": "Folder tidak tersedia"
+  "Folder not available": "Folder tidak tersedia",
+  "Sign in with a QR code": "Masuk dengan kode QR",
+  "Unable to connect to Readest. Please check your network connection.": "Tidak dapat terhubung ke Readest. Periksa koneksi jaringan Anda.",
+  "Approve on a phone or computer signed in to Readest.": "Setujui di ponsel atau komputer yang sudah masuk ke Readest."
 }

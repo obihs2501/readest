@@ -2753,5 +2753,8 @@
   "Books uploaded": "Sách đã tải lên",
   "Reset Counts": "Đặt lại số liệu",
   "Reset the counts and sync history on this device?": "Đặt lại số liệu và lịch sử đồng bộ trên thiết bị này?",
-  "Folder not available": "Thư mục không khả dụng"
+  "Folder not available": "Thư mục không khả dụng",
+  "Sign in with a QR code": "Đăng nhập bằng mã QR",
+  "Unable to connect to Readest. Please check your network connection.": "Không thể kết nối với Readest. Vui lòng kiểm tra kết nối mạng.",
+  "Approve on a phone or computer signed in to Readest.": "Phê duyệt trên điện thoại hoặc máy tính đã đăng nhập Readest."
 }

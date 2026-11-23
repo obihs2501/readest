@@ -2826,5 +2826,8 @@
   "Books uploaded": "Yüklenen kitaplar",
   "Reset Counts": "Sayaçları Sıfırla",
   "Reset the counts and sync history on this device?": "Bu cihazdaki sayaçlar ve eşitleme geçmişi sıfırlansın mı?",
-  "Folder not available": "Klasör kullanılamıyor"
+  "Folder not available": "Klasör kullanılamıyor",
+  "Sign in with a QR code": "QR koduyla oturum aç",
+  "Unable to connect to Readest. Please check your network connection.": "Readest'e bağlanılamıyor. Lütfen ağ bağlantınızı kontrol edin.",
+  "Approve on a phone or computer signed in to Readest.": "Readest'te oturum açmış bir telefon veya bilgisayardan onaylayın."
 }

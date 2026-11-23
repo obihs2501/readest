@@ -2753,5 +2753,8 @@
   "Books uploaded": "หนังสือที่อัปโหลด",
   "Reset Counts": "รีเซ็ตจำนวน",
   "Reset the counts and sync history on this device?": "รีเซ็ตจำนวนและประวัติการซิงค์บนอุปกรณ์นี้หรือไม่",
-  "Folder not available": "โฟลเดอร์ไม่พร้อมใช้งาน"
+  "Folder not available": "โฟลเดอร์ไม่พร้อมใช้งาน",
+  "Sign in with a QR code": "ลงชื่อเข้าใช้ด้วยคิวอาร์โค้ด",
+  "Unable to connect to Readest. Please check your network connection.": "ไม่สามารถเชื่อมต่อกับ Readest ได้ โปรดตรวจสอบการเชื่อมต่อเครือข่ายของคุณ",
+  "Approve on a phone or computer signed in to Readest.": "อนุมัติบนโทรศัพท์หรือคอมพิวเตอร์ที่ลงชื่อเข้าใช้ Readest อยู่"
 }

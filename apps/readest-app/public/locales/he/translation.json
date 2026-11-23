@@ -2899,5 +2899,8 @@
   "Books uploaded": "ספרים שהועלו",
   "Reset Counts": "איפוס ספירות",
   "Reset the counts and sync history on this device?": "לאפס את הספירות ואת היסטוריית הסנכרון במכשיר הזה?",
-  "Folder not available": "התיקייה אינה זמינה"
+  "Folder not available": "התיקייה אינה זמינה",
+  "Sign in with a QR code": "התחברות באמצעות קוד QR",
+  "Unable to connect to Readest. Please check your network connection.": "לא ניתן להתחבר ל-Readest. בדקו את חיבור הרשת.",
+  "Approve on a phone or computer signed in to Readest.": "אשרו בטלפון או במחשב שמחוברים ל-Readest."
 }

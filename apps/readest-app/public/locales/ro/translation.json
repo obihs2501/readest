@@ -2899,5 +2899,8 @@
   "Books uploaded": "Cărți încărcate",
   "Reset Counts": "Resetează contoarele",
   "Reset the counts and sync history on this device?": "Resetezi contoarele și istoricul sincronizării pe acest dispozitiv?",
-  "Folder not available": "Dosar indisponibil"
+  "Folder not available": "Dosar indisponibil",
+  "Sign in with a QR code": "Conectează-te cu un cod QR",
+  "Unable to connect to Readest. Please check your network connection.": "Nu se poate conecta la Readest. Verifică conexiunea la rețea.",
+  "Approve on a phone or computer signed in to Readest.": "Aprobă de pe un telefon sau computer conectat la Readest."
 }

@@ -2826,5 +2826,8 @@
   "Books uploaded": "උඩුගත කළ පොත්",
   "Reset Counts": "ගණන් යළි සකසන්න",
   "Reset the counts and sync history on this device?": "මෙම උපාංගයේ ගණන් සහ සමමුහුර්ත ඉතිහාසය යළි සකසන්නද?",
-  "Folder not available": "ෆෝල්ඩරය ලබා ගත නොහැක"
+  "Folder not available": "ෆෝල්ඩරය ලබා ගත නොහැක",
+  "Sign in with a QR code": "QR කේතයකින් පුරන්න",
+  "Unable to connect to Readest. Please check your network connection.": "Readest වෙත සම්බන්ධ විය නොහැක. කරුණාකර ඔබගේ ජාල සම්බන්ධතාවය පරීක්ෂා කරන්න.",
+  "Approve on a phone or computer signed in to Readest.": "Readest වෙත පුරනය වූ දුරකථනයකින් හෝ පරිගණකයකින් අනුමත කරන්න."
 }

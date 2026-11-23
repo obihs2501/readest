@@ -2826,5 +2826,8 @@
   "Books uploaded": "Uppladdade böcker",
   "Reset Counts": "Nollställ räknare",
   "Reset the counts and sync history on this device?": "Nollställ räknare och synkroniseringshistorik på den här enheten?",
-  "Folder not available": "Mappen är inte tillgänglig"
+  "Folder not available": "Mappen är inte tillgänglig",
+  "Sign in with a QR code": "Logga in med en QR-kod",
+  "Unable to connect to Readest. Please check your network connection.": "Det går inte att ansluta till Readest. Kontrollera din nätverksanslutning.",
+  "Approve on a phone or computer signed in to Readest.": "Godkänn på en telefon eller dator som är inloggad på Readest."
 }

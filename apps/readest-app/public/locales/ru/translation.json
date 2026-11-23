@@ -2972,5 +2972,8 @@
   "Books uploaded": "Загруженные книги",
   "Reset Counts": "Сбросить счётчики",
   "Reset the counts and sync history on this device?": "Сбросить счётчики и историю синхронизации на этом устройстве?",
-  "Folder not available": "Папка недоступна"
+  "Folder not available": "Папка недоступна",
+  "Sign in with a QR code": "Войти по QR-коду",
+  "Unable to connect to Readest. Please check your network connection.": "Не удаётся подключиться к Readest. Проверьте подключение к сети.",
+  "Approve on a phone or computer signed in to Readest.": "Подтвердите вход на телефоне или компьютере, где выполнен вход в Readest."
 }

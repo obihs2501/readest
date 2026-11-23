@@ -1,7 +1,8 @@
 /**
  * Provider sign-in (Google, Apple, GitHub, Discord) opens the provider's page in a browser, and
  * a magic link signs in whichever browser opens it. A runtime with no browser to open (Readest
- * Lite on a Kindle) shows only email and password sign-in.
+ * Lite on a Kindle) shows the QR code sign-in, approved on another device, and email and
+ * password sign-in.
  */
 
 import { cleanup, render } from '@testing-library/react';
@@ -34,19 +35,22 @@ describe('AuthPanel provider sign-in', () => {
     for (const provider of ['Google', 'Apple', 'GitHub', 'Discord']) {
       expect(queryByText(`Sign in with ${provider}`)).not.toBeNull();
     }
+    expect(queryByText('Sign in with a QR code')).not.toBeNull();
     expect(queryByText('or continue with email')).not.toBeNull();
     expect(queryByText('Send a magic link email')).not.toBeNull();
     getByLabelText('Email address');
   });
 
-  test('shows only email and password sign-in without a browser', () => {
+  test('shows the QR code and email and password sign-in without a browser', () => {
     h.appService.isBrowserSupported = false;
     const { queryByText, getByLabelText } = renderPanel();
     for (const provider of ['Google', 'Apple', 'GitHub', 'Discord']) {
       expect(queryByText(`Sign in with ${provider}`), `Sign in with ${provider}`).toBeNull();
     }
-    expect(queryByText('or continue with email'), 'the email divider').toBeNull();
     expect(queryByText('Send a magic link email'), 'the magic link').toBeNull();
+    // Approved on another device, so it needs no browser here.
+    expect(queryByText('Sign in with a QR code'), 'the QR code sign-in').not.toBeNull();
+    expect(queryByText('or continue with email'), 'the email divider').not.toBeNull();
     getByLabelText('Email address');
     getByLabelText('Your Password');
   });

@@ -2753,5 +2753,8 @@
   "Books uploaded": "ཡར་སྐྱེལ་བྱས་པའི་དཔེ་ཆ།",
   "Reset Counts": "གྲངས་ཚད་བསྐྱར་སྒྲིག",
   "Reset the counts and sync history on this device?": "སྒྲིག་ཆས་འདིའི་གྲངས་ཚད་དང་མཉམ་སྡེབ་ལོ་རྒྱུས་བསྐྱར་སྒྲིག་བྱེད་དམ།",
-  "Folder not available": "ཡིག་སྣོད་མི་རག"
+  "Folder not available": "ཡིག་སྣོད་མི་རག",
+  "Sign in with a QR code": "QR ཨང་རྟགས་ཀྱིས་ནང་འཛུལ།",
+  "Unable to connect to Readest. Please check your network connection.": "Readest ལ་འབྲེལ་མཐུད་བྱེད་མ་ཐུབ། ཁྱེད་ཀྱི་དྲ་རྒྱའི་འབྲེལ་མཐུད་ལ་ཞིབ་བཤེར་གནང་།",
+  "Approve on a phone or computer signed in to Readest.": "Readest ལ་ནང་འཛུལ་བྱས་པའི་ཁ་པར་རམ་གློག་ཀླད་ནས་ཆོག་མཆན་སྤྲོད།"
 }

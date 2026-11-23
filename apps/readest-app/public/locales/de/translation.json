@@ -2826,5 +2826,8 @@
   "Books uploaded": "Hochgeladene Bücher",
   "Reset Counts": "Zähler zurücksetzen",
   "Reset the counts and sync history on this device?": "Zähler und Synchronisierungsverlauf auf diesem Gerät zurücksetzen?",
-  "Folder not available": "Ordner nicht verfügbar"
+  "Folder not available": "Ordner nicht verfügbar",
+  "Sign in with a QR code": "Mit QR-Code anmelden",
+  "Unable to connect to Readest. Please check your network connection.": "Verbindung zu Readest nicht möglich. Bitte überprüfen Sie Ihre Netzwerkverbindung.",
+  "Approve on a phone or computer signed in to Readest.": "Bestätigen Sie auf einem Smartphone oder Computer, der bei Readest angemeldet ist."
 }

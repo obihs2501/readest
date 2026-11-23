@@ -2899,5 +2899,8 @@
   "Books uploaded": "Libros subidos",
   "Reset Counts": "Restablecer contadores",
   "Reset the counts and sync history on this device?": "¿Restablecer los contadores y el historial de sincronización en este dispositivo?",
-  "Folder not available": "Carpeta no disponible"
+  "Folder not available": "Carpeta no disponible",
+  "Sign in with a QR code": "Iniciar sesión con un código QR",
+  "Unable to connect to Readest. Please check your network connection.": "No se puede conectar con Readest. Comprueba tu conexión de red.",
+  "Approve on a phone or computer signed in to Readest.": "Apruébalo en un teléfono u ordenador con la sesión de Readest iniciada."
 }

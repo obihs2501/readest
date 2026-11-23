@@ -2753,5 +2753,8 @@
   "Books uploaded": "已上传书籍",
   "Reset Counts": "重置计数",
   "Reset the counts and sync history on this device?": "要重置此设备上的计数和同步记录吗？",
-  "Folder not available": "文件夹不可用"
+  "Folder not available": "文件夹不可用",
+  "Sign in with a QR code": "使用二维码登录",
+  "Unable to connect to Readest. Please check your network connection.": "无法连接到 Readest。请检查您的网络连接。",
+  "Approve on a phone or computer signed in to Readest.": "请在已登录 Readest 的手机或电脑上批准。"
 }

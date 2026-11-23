@@ -2972,5 +2972,8 @@
   "Books uploaded": "Naložene knjige",
   "Reset Counts": "Ponastavi števce",
   "Reset the counts and sync history on this device?": "Želite ponastaviti števce in zgodovino sinhronizacije v tej napravi?",
-  "Folder not available": "Mapa ni na voljo"
+  "Folder not available": "Mapa ni na voljo",
+  "Sign in with a QR code": "Prijava s kodo QR",
+  "Unable to connect to Readest. Please check your network connection.": "Povezava z Readest ni mogoča. Preverite omrežno povezavo.",
+  "Approve on a phone or computer signed in to Readest.": "Odobrite v telefonu ali računalniku, ki je prijavljen v Readest."
 }
