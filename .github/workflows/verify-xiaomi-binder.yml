@@ -125,7 +125,7 @@ jobs:
           git restore .
           pnpm tauri android build --debug --target aarch64
           cd src-tauri/gen/android
-          ./gradlew :app:testFossGenericPenDebugUnitTest --tests 'com.bilingify.readest.KeyLearnCaptureTest'
+          ./gradlew :app:testDebugUnitTest --tests 'com.bilingify.readest.KeyLearnCaptureTest'
       - uses: actions/upload-artifact@v4
         with:
           name: readest-verified-arm64-debug
