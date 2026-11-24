@@ -86,7 +86,6 @@ jobs:
             ${{ runner.temp }}/xiaomi-binder/build/reports/androidTests/
             ${{ runner.temp }}/xiaomi-old.log
   arm64-app:
-    if: github.run_number == 1
     runs-on: ubuntu-latest
     timeout-minutes: 90
     steps:
@@ -124,7 +123,17 @@ jobs:
           pnpm tauri icon ../../data/icons/readest-book.png
           git restore .
           pnpm tauri android build --debug --target aarch64
-          cd src-tauri/gen/android
+          python3 - <<'PY'
+          import glob, zipfile
+          apk = glob.glob('src-tauri/gen/android/app/build/outputs/apk/**/*-debug.apk', recursive=True)[0]
+          with zipfile.ZipFile(apk) as z:
+              abis = {name.split('/')[1] for name in z.namelist() if name.startswith('lib/') and name.endswith('.so')}
+          assert abis == {'arm64-v8a'}, abis
+          print('Verified APK native ABIs:', abis)
+          PY
+      - name: Run app mapping tests
+        run: |
+          cd apps/readest-app/src-tauri/gen/android
           ./gradlew :app:testDebugUnitTest --tests 'com.bilingify.readest.KeyLearnCaptureTest'
       - uses: actions/upload-artifact@v4
         with:
