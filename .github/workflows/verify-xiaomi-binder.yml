@@ -28,6 +28,7 @@ jobs:
           SOURCE=apps/readest-app/src-tauri/plugins/tauri-plugin-native-bridge/android/src
           cp "$SOURCE/main/java/XiaomiPenEngine.kt" "$P/src/main/java/com/readest/native_bridge/"
           cp "$SOURCE/androidTest/java/XiaomiPenEngineTest.kt" "$P/src/androidTest/java/com/readest/native_bridge/"
+          git fetch origin d7e070035eefcb3d08e555a324e59b5234be4624 --depth=1
           git show d7e070035eefcb3d08e555a324e59b5234be4624:"$SOURCE/main/java/XiaomiPenEngine.kt" > "$P/old-engine.kt"
           cp "$P/src/main/java/com/readest/native_bridge/XiaomiPenEngine.kt" "$P/fixed-engine.kt"
           printf '<manifest xmlns:android="http://schemas.android.com/apk/res/android" />\n' > "$P/src/main/AndroidManifest.xml"
@@ -85,6 +86,7 @@ jobs:
             ${{ runner.temp }}/xiaomi-binder/build/reports/androidTests/
             ${{ runner.temp }}/xiaomi-old.log
   arm64-app:
+    if: github.run_number == 1
     runs-on: ubuntu-latest
     timeout-minutes: 90
     steps:
