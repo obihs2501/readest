@@ -1,0 +1,130 @@
+name: Verify Xiaomi Binder (fork only)
+on:
+  push:
+    branches: [verify-xiaomi-pen-binder]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  parcel-regressions:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - uses: actions/setup-java@d1374f8ac74474200d16ef8ecee22c7ae7a51880
+        with:
+          distribution: zulu
+          java-version: '17'
+      - uses: android-actions/setup-android@be39fa834029ff78f1a44aa3bb0819b8fc2bd8fd
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - name: Prepare isolated real-Android test harness
+        run: |
+          P="$RUNNER_TEMP/xiaomi-binder"
+          mkdir -p "$P/src/main/java/com/readest/native_bridge" "$P/src/androidTest/java/com/readest/native_bridge"
+          SOURCE=apps/readest-app/src-tauri/plugins/tauri-plugin-native-bridge/android/src
+          cp "$SOURCE/main/java/XiaomiPenEngine.kt" "$P/src/main/java/com/readest/native_bridge/"
+          cp "$SOURCE/androidTest/java/XiaomiPenEngineTest.kt" "$P/src/androidTest/java/com/readest/native_bridge/"
+          git show d7e070035eefcb3d08e555a324e59b5234be4624:"$SOURCE/main/java/XiaomiPenEngine.kt" > "$P/old-engine.kt"
+          cp "$P/src/main/java/com/readest/native_bridge/XiaomiPenEngine.kt" "$P/fixed-engine.kt"
+          printf '<manifest xmlns:android="http://schemas.android.com/apk/res/android" />\n' > "$P/src/main/AndroidManifest.xml"
+          cat > "$P/settings.gradle.kts" <<'EOF'
+          pluginManagement { repositories { google(); mavenCentral(); gradlePluginPortal() } }
+          dependencyResolutionManagement { repositories { google(); mavenCentral() } }
+          rootProject.name = "xiaomi-binder-regression"
+          EOF
+          cat > "$P/build.gradle.kts" <<'EOF'
+          plugins {
+              id("com.android.library") version "8.9.1"
+              id("org.jetbrains.kotlin.android") version "2.1.20"
+          }
+          android {
+              namespace = "com.readest.native_bridge"
+              compileSdk = 36
+              defaultConfig {
+                  minSdk = 23
+                  testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+              }
+              compileOptions {
+                  sourceCompatibility = JavaVersion.VERSION_17
+                  targetCompatibility = JavaVersion.VERSION_17
+              }
+              kotlinOptions { jvmTarget = "17" }
+          }
+          dependencies {
+              androidTestImplementation("androidx.test.ext:junit:1.2.1")
+              androidTestImplementation("androidx.test:runner:1.6.2")
+          }
+          EOF
+          echo android.useAndroidX=true > "$P/gradle.properties"
+          curl -fsSL https://services.gradle.org/distributions/gradle-8.11.1-bin.zip -o "$RUNNER_TEMP/gradle.zip"
+          unzip -q "$RUNNER_TEMP/gradle.zip" -d "$RUNNER_TEMP"
+          echo "$RUNNER_TEMP/gradle-8.11.1/bin" >> "$GITHUB_PATH"
+      - name: Test real Parcels, old-code failure and fixed-code success
+        uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d
+        with:
+          api-level: 35
+          arch: x86_64
+          target: google_apis
+          disable-animations: true
+          script: |
+            gradle -p "$RUNNER_TEMP/xiaomi-binder" connectedDebugAndroidTest --stacktrace
+            cp "$RUNNER_TEMP/xiaomi-binder/old-engine.kt" "$RUNNER_TEMP/xiaomi-binder/src/main/java/com/readest/native_bridge/XiaomiPenEngine.kt"
+            if gradle -p "$RUNNER_TEMP/xiaomi-binder" connectedDebugAndroidTest > "$RUNNER_TEMP/xiaomi-old.log" 2>&1; then echo 'ERROR: old code unexpectedly passed'; exit 1; fi
+            grep -E 'Unsupported SET_FEATURE must not count as success|Missing status must not be read as successful zero|Failed initialization must unregister' "$RUNNER_TEMP/xiaomi-old.log"
+            cp "$RUNNER_TEMP/xiaomi-binder/fixed-engine.kt" "$RUNNER_TEMP/xiaomi-binder/src/main/java/com/readest/native_bridge/XiaomiPenEngine.kt"
+            gradle -p "$RUNNER_TEMP/xiaomi-binder" connectedDebugAndroidTest --stacktrace
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: xiaomi-parcel-test-results
+          path: |
+            ${{ runner.temp }}/xiaomi-binder/build/reports/androidTests/
+            ${{ runner.temp }}/xiaomi-old.log
+  arm64-app:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - run: git submodule update --init --recursive
+      - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with:
+          node-version: 24
+          cache: pnpm
+      - uses: actions/setup-java@d1374f8ac74474200d16ef8ecee22c7ae7a51880
+        with:
+          distribution: zulu
+          java-version: '17'
+      - uses: android-actions/setup-android@be39fa834029ff78f1a44aa3bb0819b8fc2bd8fd
+        with:
+          packages: platform-tools
+      - run: sdkmanager 'ndk;28.2.13676358'
+      - run: pnpm install --frozen-lockfile --prefer-offline
+      - run: pnpm --filter @readest/readest-app setup-vendors
+      - uses: dtolnay/rust-toolchain@29eef336d9b2848a0b548edc03f92a220660cdb8
+        with:
+          targets: aarch64-linux-android
+      - uses: Swatinem/rust-cache@eedcf2fb1c22f010a0eb66b92f378c110977f266
+        with:
+          workspaces: apps/readest-app/src-tauri
+      - name: Build only arm64-v8a app and run mapping tests
+        env:
+          NDK_HOME: ${{ env.ANDROID_HOME }}/ndk/28.2.13676358
+        run: |
+          echo 'NEXT_PUBLIC_APP_PLATFORM=tauri' > apps/readest-app/.env.local
+          cd apps/readest-app
+          rm -rf src-tauri/gen/android
+          pnpm tauri android init
+          pnpm tauri icon ../../data/icons/readest-book.png
+          git restore .
+          pnpm tauri android build --debug --target aarch64
+          cd src-tauri/gen/android
+          ./gradlew :app:testFossGenericPenDebugUnitTest --tests 'com.bilingify.readest.KeyLearnCaptureTest'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: readest-verified-arm64-debug
+          path: apps/readest-app/src-tauri/gen/android/app/build/outputs/apk/**/*-debug.apk
