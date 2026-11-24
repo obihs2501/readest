@@ -1,0 +1,115 @@
+name: Android arm64 build check
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-arm64:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: initialize git submodules
+        run: git submodule update --init --recursive
+
+      - name: setup pnpm
+        uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
+
+      - name: setup node
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v6
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: setup Java
+        uses: actions/setup-java@d1374f8ac74474200d16ef8ecee22c7ae7a51880 # v6.3.0
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: setup Android SDK
+        uses: android-actions/setup-android@be39fa834029ff78f1a44aa3bb0819b8fc2bd8fd # v4
+        with:
+          packages: 'platform-tools'
+
+      - name: install NDK
+        run: sdkmanager "ndk;28.2.13676358"
+
+      - name: install dependencies
+        run: pnpm install --frozen-lockfile --prefer-offline
+
+      - name: copy vendor assets
+        run: pnpm --filter @readest/readest-app setup-vendors
+
+      - name: install Rust stable
+        uses: dtolnay/rust-toolchain@29eef336d9b2848a0b548edc03f92a220660cdb8 # stable
+        with:
+          targets: aarch64-linux-android
+
+      - uses: Swatinem/rust-cache@eedcf2fb1c22f010a0eb66b92f378c110977f266 # v2
+        with:
+          workspaces: apps/readest-app/src-tauri
+
+      - name: create .env.local
+        run: |
+          echo "NEXT_PUBLIC_APP_PLATFORM=tauri" >> .env.local
+          cp .env.local apps/readest-app/.env.local
+
+      # A throwaway signing key so the artifact installs with `adb install`
+      # without the official Readest keystore. Debug-signed, one-off, not secret.
+      - name: generate one-off debug signing key
+        run: |
+          keytool -genkeypair -v \
+            -keystore "$RUNNER_TEMP/e0f4723.jks" \
+            -storepass readest7876 -keypass readest7876 \
+            -alias e0f4723 -keyalg RSA -keysize 2048 -validity 10000 \
+            -dname "CN=Readest e0f4723, OU=PR7876, O=obihs2501, L=NA, S=NA, C=NA"
+
+      - name: build debug APK (arm64-v8a)
+        env:
+          NDK_HOME: ${{ env.ANDROID_HOME }}/ndk/28.2.13676358
+          SENTRY_AUTH_TOKEN: ''
+        run: |
+          cd apps/readest-app
+          rm -rf src-tauri/gen/android
+          pnpm tauri android init
+          pnpm tauri icon ../../data/icons/readest-book.png
+          git checkout .
+          # Tauri regenerated keystore.properties with an empty alias; point it at
+          # the key generated above so both debug and release variants sign with it.
+          printf 'keyAlias=e0f4723\npassword=readest7876\nstoreFile=%s\n' "$RUNNER_TEMP/e0f4723.jks" \
+            > src-tauri/gen/android/keystore.properties
+          pnpm tauri android build --debug --target aarch64
+          APK=$(find src-tauri/gen/android/app/build/outputs/apk -name '*-debug.apk' | head -n 1)
+          test -n "$APK"
+          echo "Built arm64 APK: $APK"
+          echo "APK_PATH=$PWD/$APK" >> "$GITHUB_ENV"
+
+      - name: verify signing, ABI and package
+        run: |
+          BT=$(ls -d "$ANDROID_HOME"/build-tools/* | sort -V | tail -n 1)
+          "$BT/apksigner" verify --print-certs "$APK_PATH" | head -n 5
+          "$BT/aapt2" dump badging "$APK_PATH" | grep -E "package:|native-code|sdkVersion|targetSdkVersion"
+
+      - name: test XiaoMi gesture mapping and source filtering
+        run: |
+          cd apps/readest-app/src-tauri/gen/android
+          ./gradlew :tauri-plugin-native-bridge:testFossGenericPenDebugUnitTest --tests 'com.readest.native_bridge.HyperOsPenGesturesTest'
+
+      - name: rename artifact
+        run: |
+          VERSION=$(node -p "require('./apps/readest-app/package.json').version")
+          cp "$APK_PATH" "$RUNNER_TEMP/Readest_${VERSION}_e0f4723_arm64-debug.apk"
+          echo "ARTIFACT=$RUNNER_TEMP/Readest_${VERSION}_e0f4723_arm64-debug.apk" >> "$GITHUB_ENV"
+
+      - name: upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: readest-arm64-e0f4723
+          path: ${{ env.ARTIFACT }}
+          if-no-files-found: error
+          retention-days: 90
